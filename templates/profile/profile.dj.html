@@ -1,0 +1,76 @@
+{% extends 'profile/base.dj.html' %}
+{% load static %}
+{% block profile_content %}
+
+  <div class="card border-top">
+    <div class="card-header bg-dark text-white">
+      <span>Profile</span> / <span href='#' class="text-secondary">Account Settings</span>
+    </div>
+    <div class="card-body position-relative">
+      {% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} mb-2">
+          <span class="text-{{ message.tags }}">{{ message }}</span>
+        </div>
+      {% endfor %}
+    {% endif %}
+    <form class="" autocomplete="off" method="POST" enctype="multipart/form-data" >
+      <div class="row justify-content-center">
+          <div class="col-lg-4 col-md-12 col-sm-12 text-center">
+          <img src="{% if user_profile.profile_picture %}{{ user_profile.profile_picture.url }}{% else %}{% static 'images/CICT.png' %}{% endif %}" id="user-profile-pic" class="rounded" height="250" width="250" alt="Default User Profile" />
+          <input type="file" id="profile-pic" name="user_profile_picture" class="d-none" />
+          <button type="button" id="change-profile-pic" class="btn btn-outline-secondary mt-3 me-auto ms-auto">
+            Change Profile Picture
+          </button>
+        </div>
+        <div class="col-lg-8 col-md-12 col-sm-12 me-auto ms-auto">
+            {% csrf_token %}
+            <div class="row">
+              {% for field in form %} 
+              {% if field.name != "user_profile_picture" %}
+                <div class="{% if field.name == "first_name" or field.name == "last_name" %}col-6 mb-3{% else %}col-12 mb-3{% endif %}">
+                  <label for="{{ field.id }}" class="form-label">
+                    {{ field.label }}
+                    <span class="upper text-danger">*</span>
+                  </label>
+                  {{ field }}
+                  <div class="invalid-feedback">
+                    {% for error in field.errors %}
+                    {{ error }}
+                    {% endfor %}
+                  </div>
+                </div>
+              {% endif %}
+              {% endfor %}
+              <div class="col-12 mb-3">
+                <button type="submit" class="btn btn-outline-primary px-4">
+                  Update Profile
+                </button>
+              </div>
+            </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  </div>
+
+{% endblock %}
+
+{% block script %}
+  <script type="text/javascript">
+
+      document.querySelector("#change-profile-pic").addEventListener("click", function() {
+        document.querySelector("#profile-pic").click();
+      });
+
+      document.querySelector("#profile-pic").addEventListener("change", function() {
+        const file = this.files[0];
+        const reader = new FileReader();
+        reader.addEventListener("load", function() {
+          document.querySelector("#user-profile-pic").setAttribute("src", this.result);
+        });
+        reader.readAsDataURL(file);
+      });
+
+  </script>
+{% endblock %}

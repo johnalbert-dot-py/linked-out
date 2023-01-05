@@ -1,0 +1,86 @@
+{% extends 'base.html' %} 
+{% block title %} {{ page_title }} {% endblock %}
+{% block content %}
+
+<div>
+    <h1>
+      {{ add_what }}
+    </h1>
+    <p class="text-secondary">
+      {{ page_description|safe }}
+    </p>
+</div>
+  
+<div>
+  {% if messages %}
+    {% for message in messages %}
+      <div class="mt-3 alert alert-{{ message.tags }} mb-2">
+      <span class="text-{{ message.tags }}">{{ message }}</span>
+      </div>
+    {% endfor %}
+  {% endif %}
+
+  <div class="row">
+    <div class="col-12">
+      <form class="" autocomplete="off" method="POST" enctype="multipart/form-data" >
+        {% csrf_token %}
+        <div class="row">
+          {% for field in form %} 
+            <div class="col-12 mb-3">
+              <label for="{{ field.id }}" class="form-label">
+                {{ field.label }}
+                <span class="upper text-danger">*</span>
+              </label>
+              {% comment %} check if input type is file {% endcomment %}
+              {% if field.field.widget.input_type == "file" %}
+              {% if field.name == "resume"%}
+              <br>
+              <a href="{% if field.value.url %}{{ field.value.url }}{% else %}{% endif %}" class="btn btn-md btn-primary">Download Resume</a>
+              {% else %}
+              <input type="file" class="form-control {% if field.errors %}is-invalid{% endif %}" id="{{ field.id }}" name="{{ field.name }}">
+              {% if field.value.url %}
+              <div style="margin-top: 3px !important; font-size: .8rem">
+                Current File: <a href="{{ field.value.url }}" class="mx-2" style="color: blue !important" target="_blank">{{ field.value.name }}</a>
+              </div>
+              {% endif %}
+              {% endif %}
+              {% else %}
+              {{ field }}
+              {% endif %}
+              <div class="invalid-feedback">
+                {% for error in field.errors %}
+                {{ error }}
+                {% endfor %}
+              </div>
+            </div>
+          {% endfor %}
+          <div class="col-12 mb-3">
+            {% if action_title %}
+            <button type="submit" class="btn btn-outline-primary px-4">
+              {{ action_title }}
+            </button>
+            {% endif %}
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+</div>
+{% endblock %}
+{% block script %}
+<script type="text/javascript">
+  var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+  var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+    return new bootstrap.Tooltip(tooltipTriggerEl)
+  })
+  
+  document.querySelector("select[name='status']").addEventListener("input", (s) => {
+    if (s.target.value == "") return;
+    const url =  new URL(window.location.href);
+    url.searchParams.set("status", s.target.value);
+    document.location.href = url.pathname + url.search;
+  })
+
+</script>
+{% endblock script %}

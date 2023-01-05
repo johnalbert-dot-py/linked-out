@@ -1,0 +1,83 @@
+{% extends 'base.html' %} 
+{% block title %} {{ page_title }} {% endblock %}
+{% block content %}
+
+<div>
+    <h1>
+      {{ list_of }}
+    </h1>
+    <p class="text-secondary">
+      {{ page_description }}
+    </p>
+  </div>
+  
+  {% if messages %}
+  {% for message in messages %}
+    <div class="mt-3 alert alert-{{ message.tags }} mb-2">
+      <span class="text-{{ message.tags }}">{{ message }}</span>
+    </div>
+  {% endfor %}
+{% endif %}
+
+  <div class="mt-3">
+    <table class="table table-striped table-hover border">
+      <thead >
+        <tr>
+          {% for table_head in table_heads %}
+            <th class="p-3 text-s" style="whitespace: no-wrap">
+                {{ table_head }}
+            </th>
+            {% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+        {% if data_lists %}
+          {% for data in data_lists %}
+            <tr >
+              {% for f in data.inside_data %}
+                <td class="p-3 mx-0" style="whitespace: no-wrap">
+                  {{ f }}
+                </td>
+              {% endfor %}
+              <td class="py-3 " style="whitespace: no-wrap; display: flex; flex-direction: flex-row; justify-content: start; align-items: center; flex-wrap: wrap">
+                {% for f in data.actions %}
+                  <span class="ms-2">{{ f|safe }}</span>
+                {% endfor %}
+              </td>
+          </tr>
+          {% endfor %}
+        {% else %}
+          <tr>
+            <td colspan="6" class="p-3">
+              <p class="text-center my-auto text-secondary ">
+                {{ no_data_found }}
+              </p>
+            </td>
+          </tr>
+        {% endif %}
+      </tbody>
+    </table>
+
+    {% if action_add %}
+    <a href="{{ action_add_url }}" class="mt-1 btn btn-outline-primary">
+      {{ action_add }}
+    </a>
+    {% endif %}
+  </div>
+{% endblock %}
+{% block script %}
+<script type="text/javascript">
+  var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+  var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+    return new bootstrap.Tooltip(tooltipTriggerEl)
+  })
+  
+  document.querySelector("select[name='status']").addEventListener("input", (s) => {
+    if (s.target.value == "") return;
+    const url =  new URL(window.location.href);
+    url.searchParams.set("status", s.target.value);
+    document.location.href = url.pathname + url.search;
+  })
+
+</script>
+{% endblock script %}

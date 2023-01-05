@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block title %} User Logout {% endblock %}
+{% block content %}
+
+<div class="row">
+  <div class="col-8 col-md-8 ms-auto me-auto">
+    <div class="card">
+      <div class="card-body">
+      <h2 class="card-title">Are you sure you want to Log Out?</h2>
+      <p class="card-description">
+        You are about to leave CICT Faculty Management System. Please click the button below to confirm.
+      </p>
+      <form method="POST" action="">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-outline-danger btn-md">
+          Logout
+        </button>
+        <button type="button" class="btn btn-primary" onclick="window.history.back()">
+          Go Back
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

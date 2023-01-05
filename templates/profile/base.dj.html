@@ -1,0 +1,56 @@
+{% extends 'base.html' %} 
+{% block title %} User Profile {% endblock %}
+{% block head %}
+<style>
+
+  a.active {
+    color: #fff !important;
+  }
+
+  a:visited {
+    color: #fff !important;
+  }
+
+  .sidebar-nav-item a {
+    color: rgba(255,255,255,0.4);
+  }
+
+  .sidebar-nav-item:hover a {
+    color: #fff;
+  }
+</style>
+{% endblock %}
+{% block content %}
+  <div class="row">
+    <aside class="col-3">
+      <div class="card border-0">
+        <ul class="nav rounded flex-column py-3 bg-dark">
+          {% if user_type == "job-hunter" %}
+          <li class="nav-item px-4 py-2 sidebar-nav-item ">
+            <a href="{% url 'job-profile-settings' %}" class="nav-link {% if "job-profile-settings/" in request.path  %}active" aria-current="Job Profile Settings{% endif %}">Job Profile Settings</a>
+          </li>
+          {% elif user_type == "job-provider" %}
+          <li class="nav-item px-4 py-2 sidebar-nav-item ">
+            <a href="{% url 'job-provider-profile-settings' %}" class="nav-link {% if "job-provider-profile-settings/" in request.path  %}active" aria-current="Company Profile Settings{% endif %}">Company Profile Settings</a>
+          </li>
+          {% endif %}
+          <li class="nav-item px-4 py-2 sidebar-nav-item ">
+            <a href="{% url 'profile' %}" class="nav-link {% if request.path == "/profile/"  %}active" aria-current="Account Settings{% endif %}">Account Settings</a>
+          </li>
+          <li class="nav-item px-4 py-2 sidebar-nav-item">
+            <a href="{% url 'change-password' %}" class="nav-link {% if request.path == "/profile/change-password/"  %}active" aria-current="Change Password{% endif %}">Change Password</a>
+          </li>
+          <li class="nav-item px-4 py-2 sidebar-nav-item">
+            <a href="{% url 'logout' %}" class="nav-link">Log Out</a>
+          </li>
+        </ul>
+      </div>
+    </aside>
+    <section class="col-9">
+      {% block profile_content %}
+      {% endblock %}
+    </section>
+  </div>
+
+
+{% endblock %}

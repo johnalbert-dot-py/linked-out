@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block title %} {{ page_title }} {% endblock %}
+{% block content %}
+
+<div class="row">
+  <div class="col-8 col-md-8 ms-auto me-auto">
+    <div class="card">
+      <div class="card-body">
+      <h2 class="card-title">{{ confirmation_title }}</h2>
+      <p class="card-description">
+        {{ confirmation_description }}
+      </p>
+      <form method="POST" action="">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-outline-danger btn-md">
+          {{ page_title }}
+        </button>
+        <button type="button" class="btn btn-primary" onclick="window.history.back()">
+          Go Back
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
